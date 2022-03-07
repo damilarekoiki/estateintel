@@ -18,4 +18,13 @@ class Controller extends BaseController
             "data" => $data
         ]);
     }
+
+    public function returnResponseWithMessage($data, $message, $status="success", $status_code=200){
+        return response()->json([
+            "status_code" => $status_code,
+            "status" => $status,
+            "message" => $message,
+            "data" => $data
+        ]);
+    }
 }

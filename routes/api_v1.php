@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('books', BookController::class);
+Route::post('/books/{id}/delete', [BookController::class, 'destroy']);

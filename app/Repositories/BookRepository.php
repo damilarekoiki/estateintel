@@ -23,7 +23,7 @@ class BookRepository implements BookRepositoryInterface
     public function getBook(Book $book) : Book {
         return $book;
     }
-    public function getBookById(int $BookId) : Book {
+    public function getBookById(int $BookId) : ?Book {
         $book = Book::find($BookId);
         return $book;
     }
@@ -31,7 +31,7 @@ class BookRepository implements BookRepositoryInterface
         return tap($book)->delete();
     }
     public function deleteBookById(int $BookId) : Book{
-        $book = Book::findOrFail($BookId);
+        $book = Book::find($BookId);
         return tap($book)->delete();
     }
     public function fetchAllBooks($searchObject) : Collection {

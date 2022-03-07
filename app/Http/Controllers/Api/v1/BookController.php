@@ -10,7 +10,7 @@ use App\Http\Resources\BookResourseCollection;
 use App\Http\Resources\CreateBookResourse;
 use App\Interfaces\BookRepositoryInterface;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
@@ -71,6 +71,10 @@ class BookController extends Controller
     {
         //
         $book = $this->bookRepository->getBookById($id);
+        if(empty($book)){
+            return $this->returnResponse([], "not found", 404);
+        }
+
         return $this->returnResponse($book);
     }
 
@@ -110,6 +114,14 @@ class BookController extends Controller
     {
         //
         $book = $this->bookRepository->deleteBook($book);
+        Log::debug(($book));
         return $this->returnResponse($book, 'success', 204);
     }
+
+    // public function deleteBook($id)
+    // {
+    //     //
+    //     $book = $this->bookRepository->deleteBookById($id);
+    //     return $this->returnResponse($book, 'success', 204);
+    // }
 }
