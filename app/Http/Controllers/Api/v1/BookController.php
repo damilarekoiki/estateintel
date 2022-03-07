@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Http\Requests\StoreBookRequest;
-use App\Http\Requests\UpdateBookRequest;
 use App\Interfaces\BookRepositoryInterface;
-use App\Services\BookService;
 use Illuminate\Http\Request;
 
 
@@ -91,7 +89,7 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateBookRequest $request, Book $book)
+    public function update(StoreBookRequest $request, Book $book)
     {
         //
         $book = $this->bookRepository->updateBook($book, $request->validated);
