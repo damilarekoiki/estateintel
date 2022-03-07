@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Http\Requests\StoreBookRequest;
+use App\Http\Resources\BookResourse;
+use App\Http\Resources\BookResourseCollection;
+use App\Http\Resources\CreateBookResourse;
 use App\Interfaces\BookRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -26,9 +29,9 @@ class BookController extends Controller
     public function index(Request $request)
     {
         //
-        // $books = BookService::fetchAllBooks();
         $books = $this->bookRepository->fetchAllBooks($request);
-        return $this->returnResponse($books);
+        $response = BookResourseCollection::collection($books);
+        return $this->returnResponse($response);
     }
 
     /**
@@ -49,12 +52,12 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        //
-        // $book = BookService::createNewBook($request->validated());
 
         $book = $this->bookRepository->createBook($request->validated());
 
-        return $this->returnResponse($book, "success", 201);
+        $response = new CreateBookResourse($book);
+
+        return $this->returnResponse($response, "success", 201);
 
     }
 
@@ -92,8 +95,9 @@ class BookController extends Controller
     public function update(StoreBookRequest $request, Book $book)
     {
         //
-        $book = $this->bookRepository->updateBook($book, $request->validated);
-        return $this->returnResponse($book);
+        $book = $this->bookRepository->updateBook($book, $request->validated());
+        $response = new BookResourse($book);
+        return $this->returnResponse($response);
     }
 
     /**

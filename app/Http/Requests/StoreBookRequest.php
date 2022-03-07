@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class StoreBookRequest extends FormRequest
 {
@@ -37,13 +38,16 @@ class StoreBookRequest extends FormRequest
         return [
             //
             'name' => 'required',
-            'isbn' => 'required',
+            'isbn' => [
+                'required',
+                Rule::unique('book')->ignore($this->id)
+            ],
             'authors' => 'required | array',
             "authors.*" => 'required | string',
             'country' => 'required | string',
             'number_of_pages' => 'required | integer',
             'publisher' => 'required |string',
-            'release_date' => 'required',
+            'release_date' => 'required | date',
         ];
     }
 }

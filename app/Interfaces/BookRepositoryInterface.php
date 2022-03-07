@@ -14,9 +14,9 @@ interface BookRepositoryInterface
     public function getBookById(int $BookId) : Book;
     public function deleteBook(Book $book) : Book;
     public function deleteBookById(int $BookId) : Book;
-    public function fetchAllBooks($searchObject) : Book;
-    public function searchBookBy(string $field, $value) : Book;
-    public function searchBook($keyword) : Book;
+    public function fetchAllBooks($searchObject) : Collection;
+    public function searchBookBy(string $field, $value) : Collection;
+    public function searchBook($keyword) : Collection;
     public function fetchExternalBooks(string $name);
 
 }

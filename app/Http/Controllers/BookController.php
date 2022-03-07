@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ExternalBookResourse;
+use App\Http\Resources\ExternalBookResourseCollection;
 use App\Interfaces\BookRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -20,7 +20,7 @@ class BookController extends Controller
 
         $response = $this->bookRepository->fetchExternalBooks($request->name);
 
-        $response = ExternalBookResourse::collection(collect($response));
+        $response = ExternalBookResourseCollection::collection(collect($response));
 
         if(empty($response)){
             return $this->returnResponse($response, "not found", 404);

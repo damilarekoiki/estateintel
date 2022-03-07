@@ -34,19 +34,19 @@ class BookRepository implements BookRepositoryInterface
         $book = Book::findOrFail($BookId);
         return tap($book)->delete();
     }
-    public function fetchAllBooks($searchObject) : Book {
+    public function fetchAllBooks($searchObject) : Collection {
         $books = Book::all();
         if($searchObject->keyword){
             $books = $this->searchBook($searchObject->keyword);
         }
         return $books;
     }
-    public function searchBookBy(string $field, $value) : Book {
+    public function searchBookBy(string $field, $value) : Collection {
         $books = Book::where($field, 'LIKE', '%'.$value.'%')
         ->get();
         return $books;
     }
-    public function searchBook( $keyword) : Book {
+    public function searchBook( $keyword) : Collection {
         $books = Book::where('name', 'LIKE', '%'.$keyword.'%')
         ->orWhere('country', 'LIKE', '%'.$keyword.'%')
         ->orWhere('publisher', 'LIKE', '%'.$keyword.'%')

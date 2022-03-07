@@ -3,11 +3,8 @@
 namespace App\Http\Resources;
 
 use Carbon\Carbon;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Facades\Log;
-
-class ExternalBookResourse extends ResourceCollection
+class ExternalBookResourseCollection extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +14,8 @@ class ExternalBookResourse extends ResourceCollection
      */
     public function toArray($request)
     {
-        $released_date = Carbon::parse($this->collection['released']);
-        $released_date = $released_date->toDateString();
+        $release_date = Carbon::parse($this->collection['released']);
+        $release_date = $release_date->toDateString();
         return [
             'name' => $this->collection['name'],
             'isbn' => $this->collection['isbn'],
@@ -26,7 +23,7 @@ class ExternalBookResourse extends ResourceCollection
             'number_of_pages' => $this->collection['numberOfPages'],
             'publisher' => $this->collection['publisher'],
             'country' => $this->collection['country'],
-            'release_date' => $released_date,
+            'release_date' => $release_date,
         ];
     }
 }
