@@ -23,26 +23,37 @@ class BookRepository implements BookRepositoryInterface
     public function getBook(Book $book) : Book {
         return $book;
     }
-    public function getBookId(int $BookId) : Book {
+    public function getBookById(int $BookId) : Book {
         $book = Book::find($BookId);
         return $book;
     }
     public function deleteBook(Book $book) : Book {
         return tap($book)->delete();
     }
-    public function deleteBookId(int $BookId) : Book{
+    public function deleteBookById(int $BookId) : Book{
         $book = Book::findOrFail($BookId);
         return tap($book)->delete();
     }
-    public function fetchAllBooks() : Collection {
-        return Book::all();
+    public function fetchAllBooks($searchObject) : Book {
+        $books = Book::all();
+        if($searchObject->keyword){
+            $books = $this->searchBook($searchObject->keyword);
+        }
+        return $books;
     }
     public function searchBookBy(string $field, $value) : Book {
         $books = Book::where($field, 'LIKE', '%'.$value.'%')
         ->get();
         return $books;
     }
-
+    public function searchBook( $keyword) : Book {
+        $books = Book::where('name', 'LIKE', '%'.$keyword.'%')
+        ->orWhere('country', 'LIKE', '%'.$keyword.'%')
+        ->orWhere('publisher', 'LIKE', '%'.$keyword.'%')
+        ->orWhereYear('release_date', 'LIKE', '%'.$keyword.'%')
+        ->get();
+        return $books;
+    }
     public function fetchExternalBooks(string $name){
         $url = config('book.external_books_url');
         $parameters = ['name' => $name];

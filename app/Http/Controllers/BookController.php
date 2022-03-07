@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\HttpService;
-use Illuminate\Http\Client\ConnectionException;
+use App\Interfaces\BookRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
+    private BookRepositoryInterface $bookRepository;
+
+    public function __construct(BookRepositoryInterface $bookRepository) 
+    {
+        $this->bookRepository = $bookRepository;
+    }
+    
     //
     public function fetchExternalBooks(Request $request){
 
-
-        $url = config('book.external_books_url');
-        $parameters = ['name' => $request->name];
-
-        $response = (new HttpService())->get($url, $parameters);
+        $response = $this->bookRepository->fetchExternalBooks($request->name);
 
         if(empty($response)){
-            return $this->successResponse($response, "not found", 404);
+            return $this->returnResponse($response, "not found", 404);
         }
 
-        return $this->successResponse($response);
+        return $this->returnResponse($response);
     }
 }
