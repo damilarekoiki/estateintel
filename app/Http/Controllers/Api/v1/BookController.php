@@ -10,7 +10,6 @@ use App\Http\Resources\BookResourseCollection;
 use App\Http\Resources\CreateBookResourse;
 use App\Interfaces\BookRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
@@ -113,6 +112,6 @@ class BookController extends Controller
 
         // Return success response
         $message = "The book '{$book->name}' was deleted successfully";
-        return $this->returnResponseWithMessage([], $message);
+        return $this->returnResponseWithMessage([], $message, "status", 204);
     }
 }

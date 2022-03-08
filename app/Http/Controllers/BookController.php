@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FetchExternalBooksRequest;
 use App\Http\Resources\ExternalBookResourseCollection;
 use App\Interfaces\BookRepositoryInterface;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class BookController extends Controller
     }
     
     //
-    public function fetchExternalBooks(Request $request){
+    public function fetchExternalBooks(FetchExternalBooksRequest $request){
 
         $response = $this->bookRepository->fetchExternalBooks($request->name);
 
