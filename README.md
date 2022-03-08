@@ -7,14 +7,14 @@ Versions
 Installations and setup
 - Install xampp
 - After installation of Xampp, open Xampp and turn on MySQL and Apache
-- Open localhost/phpmyadmin on a web browser and create a database called estateintel
+- Open localhost/phpmyadmin on a web browser and create a database called **estateintel**
 - Install composer
-- Open command prompt or terminal on your PC and change to directory of this project
-- Once that is done run composer install to install all dependencies
-- Run cp .env.example .env to copy the environment file
+- Open command prompt or terminal on your PC and navigate to the directory of this project
+- Once that is done, run **composer install** to install all dependencies
+- Run **cp .env.example .env** to copy the environment file
 - Open the .env file
-- In the .env file, set the value of the variable DB_DATABASE to estateintel
-- In the .env file, set DB_USERNAME and DB_PASSWORD based on your database configurations
+- In the .env file, set the value of the variable **DB_DATABASE** to **estateintel**
+- In the .env file, set **DB_USERNAME** and **DB_PASSWORD** based on your database configurations
 
 Project structure
 
