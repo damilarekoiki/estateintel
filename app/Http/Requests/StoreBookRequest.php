@@ -18,16 +18,6 @@ class StoreBookRequest extends FormRequest
         return true;
     }
 
-    // protected function prepareForValidation()
-    // {
-    //     Log::alert($this->authors);
-    //     $authors = json_decode($this->authors, true);
-    //     Log::debug($authors);
-    //     return $this->merge([
-    //         'authors' => $authors,
-    //     ]);
-    // }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -40,7 +30,7 @@ class StoreBookRequest extends FormRequest
             'name' => 'required',
             'isbn' => [
                 'required',
-                Rule::unique('book')->ignore($this->id)
+                Rule::unique('book')->ignore($this->book)
             ],
             'authors' => 'required | array',
             "authors.*" => 'required | string',

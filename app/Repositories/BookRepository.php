@@ -13,46 +13,53 @@ class BookRepository implements BookRepositoryInterface
         $book = Book::create($bookData);
         return $book;
     }
-    public function updateBook(Book $book, array $bookData) : Book {
-        return tap($book)->update($bookData);
+    public function updateBookById(int $bookId, array $bookData) : array {
+        $book = Book::where('id', $bookId)->first();
+        $updatedBook = null;
+        if($book){
+            $updatedBook = clone $book;
+            $updatedBook = tap($updatedBook)->update($bookData);
+        }
+        return [
+            'book' => $book,
+            'updated_book' => $updatedBook,
+        ];
     }
-    public function updateBookById(int $BookId, array $bookData) : Book {
-        $book = Book::findOrFail($BookId);
-        return tap($book)->update($bookData);
-    }
-    public function getBook(Book $book) : Book {
+    public function getBookById(int $bookId) : ?Book {
+        $book = Book::find($bookId);
         return $book;
     }
-    public function getBookById(int $BookId) : ?Book {
-        $book = Book::find($BookId);
-        return $book;
-    }
-    public function deleteBook(Book $book) : Book {
-        return tap($book)->delete();
-    }
-    public function deleteBookById(int $BookId) : Book{
-        $book = Book::find($BookId);
-        return tap($book)->delete();
+    public function deleteBookById(int $bookId) : array {
+        $book = Book::find($bookId);
+        $deletedBook = null;
+        if($book){
+            $deletedBook = clone $book;
+            $deletedBook = tap($deletedBook)->delete();
+        }
+        return [
+            'book' => $book,
+            'deleted_book' => $deletedBook,
+        ];
     }
     public function fetchAllBooks($searchObject) : Collection {
-        $books = Book::all();
-        if($searchObject->keyword){
-            $books = $this->searchBook($searchObject->keyword);
-        }
-        return $books;
-    }
-    public function searchBookBy(string $field, $value) : Collection {
-        $books = Book::where($field, 'LIKE', '%'.$value.'%')
+        
+        // If search parameters are present, search by parameters else fetch all
+        $books = Book::when($searchObject->name, function ($query) use($searchObject){
+            return $query->where('name', 'LIKE', '%'.$searchObject->name.'%');
+        })
+        ->when($searchObject->country, function ($query) use($searchObject){
+            return $query->orWhere('country', 'LIKE', '%'.$searchObject->country.'%');
+        })
+        ->when($searchObject->publisher, function ($query) use($searchObject){
+            return $query->orWhere('publisher', 'LIKE', '%'.$searchObject->publisher.'%');
+        })
+        ->when($searchObject->release_date, function ($query) use($searchObject){
+            return $query->orWhereYear('release_date', 'LIKE', '%'.$searchObject->release_date.'%');
+        })
         ->get();
+
         return $books;
-    }
-    public function searchBook( $keyword) : Collection {
-        $books = Book::where('name', 'LIKE', '%'.$keyword.'%')
-        ->orWhere('country', 'LIKE', '%'.$keyword.'%')
-        ->orWhere('publisher', 'LIKE', '%'.$keyword.'%')
-        ->orWhereYear('release_date', 'LIKE', '%'.$keyword.'%')
-        ->get();
-        return $books;
+
     }
     public function fetchExternalBooks(string $name){
         $url = config('book.external_books_url');

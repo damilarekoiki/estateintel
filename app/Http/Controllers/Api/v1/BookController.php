@@ -35,16 +35,6 @@ class BookController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\StoreBookRequest  $request
@@ -64,64 +54,65 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         //
         $book = $this->bookRepository->getBookById($id);
+        
         if(empty($book)){
             return $this->returnResponse([], "not found", 404);
         }
 
-        return $this->returnResponse($book);
-    }
+        $response = new BookResourse($book);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Book  $book
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Book $book)
-    {
-        //
+        return $this->returnResponse($response);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \App\Http\Requests\UpdateBookRequest  $request
-     * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreBookRequest $request, Book $book)
+    public function update(StoreBookRequest $request, $bookId)
     {
-        //
-        $book = $this->bookRepository->updateBook($book, $request->validated());
-        $response = new BookResourse($book);
-        return $this->returnResponse($response);
+        // Update book
+        $bookData = $request->validated();
+        $update = $this->bookRepository->updateBookById($bookId, $bookData);
+        $book = $update['book'];
+        $updatedBook = $update['updated_book'];
+
+        // Return error response
+        if(empty($book)){
+            return $this->returnResponse([], "not found", 404);
+        }
+
+        // Return success response
+        $response = new BookResourse($updatedBook);
+        $message = "The book {$book->name} was updated successfully";
+        return $this->returnResponseWithMessage($response, $message);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Book $book)
+    public function destroy($bookId)
     {
-        //
-        $book = $this->bookRepository->deleteBook($book);
-        Log::debug(($book));
-        return $this->returnResponse($book, 'success', 204);
-    }
+        // Delete book
+        $delete = $this->bookRepository->deleteBookById($bookId);
+        $book = $delete['book'];
 
-    // public function deleteBook($id)
-    // {
-    //     //
-    //     $book = $this->bookRepository->deleteBookById($id);
-    //     return $this->returnResponse($book, 'success', 204);
-    // }
+        // Return error response
+        if(empty($book)){
+            return $this->returnResponse([], "not found", 404);
+        }
+
+        // Return success response
+        $message = "The book '{$book->name}' was deleted successfully";
+        return $this->returnResponseWithMessage([], $message);
+    }
 }
